@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cooling Tools Pro | سيف الدين محسن</title>
+
+    <!-- إعدادات PWA -->
+    <link rel="manifest" href="js/manifest.json">
+    <link rel="apple-touch-icon" href="icons/icon-192x192.png">
+    <meta name="theme-color" content="#2563eb">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="basic.css">
+    <link rel="shortcut icon" href="favicon.png" type="image/x-png">
+    <!-- أيقونة PWA - المسار المطلوب -->
+    <link rel="icon" type="image/png" sizes="192x192" href="icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="icon-512x512.png">
+</head>
+
+<body class="pb-28">
+
+    <!-- Modal المشاركة (مخفي) -->
+    <div id="share-modal" class="hidden"></div>
+
+    <!-- Header -->
+    <header
+        class="bg-blue-700 text-white p-5 shadow-lg sticky top-0 z-50 flex justify-between items-center rounded-b-[2rem]">
+        <button onclick="toggleSidebar()" class="text-2xl p-1 active:scale-90 transition-transform"><i
+                class="fas fa-bars"></i></button>
+        <h1 id="header-title" class="text-xl font-bold tracking-tight" data-lang="headerTitle">Cooling Tools Pro</h1>
+        <div class="text-[12px] bg-white/20 backdrop-blur-md px-3 py-1 rounded-full font-bold num-font">2026</div>
+    </header>
+
+    <!-- Sidebar Menu -->
+    <div id="sidebar" class="sidebar fixed top-0 right-0 h-full w-80 bg-white shadow-2xl closed overflow-y-auto">
+        <div class="p-8">
+            <div class="flex justify-between items-center mb-8">
+                <h2 class="font-bold text-2xl text-blue-800 border-r-4 border-blue-600 pr-3" data-lang="menuTitle">
+                    القائمة</h2>
+                <button onclick="toggleSidebar()" class="text-gray-400 text-3xl">×</button>
+            </div>
+
+            <!-- أزرار التحكم -->
+            <div class="flex gap-3 mb-6">
+                <button onclick="toggleDarkMode()" id="themeToggleSidebar"
+                    class="flex-1 py-4 px-2 bg-gradient-to-l from-blue-600 to-blue-500 text-white rounded-full flex items-center justify-center gap-2 font-bold shadow-md active:scale-95 transition-all duration-200">
+                    <i class="fas fa-moon"></i>
+                    <span id="nightModeText" data-lang="nightMode">ليلي</span>
+                </button>
+                <button onclick="toggleLanguage()" id="langToggleSidebar"
+                    class="flex-1 py-4 px-2 bg-gradient-to-l from-green-600 to-green-500 text-white rounded-full flex items-center justify-center gap-2 font-bold shadow-md active:scale-95 transition-all duration-200">
+                    <i class="fas fa-globe"></i>
+                    <span id="langToggleText">English</span>
+                </button>
+            </div>
+
+            <!-- هذا هو الجزء المعدل في القائمة الجانبية -->
+            <div class="space-y-4">
+                <div class="text-[11px] font-bold text-gray-400 uppercase tracking-widest mr-2" data-lang="connections">
+                    التوصيلات</div>
+
+                <!-- زر حساب قطر السلك (أزرق فاتح) -->
+                <button onclick="openWireCalc()"
+                    class="w-full text-right p-5 bg-gray-50 rounded-2xl flex justify-between items-center group active:bg-blue-100">
+                    <span class="font-bold text-blue-900"><i class="fas fa-bolt-lightning ml-3 text-blue-600"></i><span
+                            data-lang="wireCalc">حساب قطر السلك</span></span>
+                            <i class="fas fa-chevron-left  menu-arrow text-blue-300 dark:text-blue-500 group-hover:-translate-x-1 transition-transform"></i>
+                </button>
+
+                <!-- زر حساب التدفق من الإزاحة (نفس لون زر السلك - أزرق فاتح) -->
+                <button onclick="openFlowCalculator()"
+                    class="w-full text-right p-5 bg-gray-50 rounded-2xl flex justify-between items-center group active:bg-blue-100">
+                    <span class="font-bold text-blue-900"><i class="fas fa-water ml-3 text-blue-600"></i><span
+                            data-lang="flowCalc">حساب التدفق من الإزاحة</span></span>
+                            <i class="fas fa-chevron-left menu-arrow text-blue-300 dark:text-blue-500 group-hover:-translate-x-1 transition-transform"></i>
+                </button>
+            </div>
+
+            <div class="text-[11px] font-bold text-gray-400 uppercase tracking-widest mr-2 mt-6"
+                data-lang="conversions">التحويلات</div>
+            <div class="grid grid-cols-1 gap-3">
+                <button onclick="openUnitConverter('cooling')"
+                    class="w-full text-right p-4 bg-gray-50 rounded-2xl flex justify-between items-center active:bg-gray-100">
+                    <span><i class="fas fa-snowflake ml-3 text-blue-500"></i><span data-lang="coolingUnits">وحدات
+                            التبريد</span></span>
+                            <i class="fas fa-chevron-left menu-arrow text-blue-300 dark:text-blue-500 group-hover:-translate-x-1 transition-transform"></i>
+                </button>
+                <button onclick="openUnitConverter('length')"
+                    class="w-full text-right p-4 bg-gray-50 rounded-2xl flex justify-between items-center active:bg-gray-100">
+                    <span><i class="fas fa-ruler-combined ml-3 text-blue-500"></i><span data-lang="lengthUnits">وحدات
+                            الطول</span></span>
+                            <i class="fas fa-chevron-left menu-arrow text-blue-300 dark:text-blue-500 group-hover:-translate-x-1 transition-transform"></i>
+                </button>
+                <button onclick="openUnitConverter('mass')"
+                    class="w-full text-right p-4 bg-gray-50 rounded-2xl flex justify-between items-center active:bg-gray-100">
+                    <span><i class="fas fa-weight-hanging ml-3 text-blue-500"></i><span data-lang="massUnits">وحدات
+                            الكتلة</span></span>
+                            <i class="fas fa-chevron-left menu-arrow text-blue-300 dark:text-blue-500 group-hover:-translate-x-1 transition-transform"></i>
+                </button>
+                <button onclick="openUnitConverter('area')"
+                    class="w-full text-right p-4 bg-gray-50 rounded-2xl flex justify-between items-center active:bg-gray-100">
+                    <span><i class="fas fa-square ml-3 text-blue-500"></i><span data-lang="areaUnits">وحدات
+                            المساحة</span></span>
+                            <i class="fas fa-chevron-left menu-arrow text-blue-300 dark:text-blue-500 group-hover:-translate-x-1 transition-transform"></i>
+                </button>
+                <button onclick="openUnitConverter('pressure')"
+                    class="w-full text-right p-4 bg-gray-50 rounded-2xl flex justify-between items-center active:bg-gray-100">
+                    <span><i class="fas fa-compress ml-3 text-blue-500"></i><span data-lang="pressureUnits">وحدات
+                            الضغط</span></span>
+                            <i class="fas fa-chevron-left menu-arrow text-blue-300 dark:text-blue-500 group-hover:-translate-x-1 transition-transform"></i>
+                </button>
+                <button onclick="openUnitConverter('volume')"
+                    class="w-full text-right p-4 bg-gray-50 rounded-2xl flex justify-between items-center active:bg-gray-100">
+                    <span><i class="fas fa-cube ml-3 text-blue-500"></i><span data-lang="volumeUnits">وحدات
+                            الحجم</span></span>
+                            <i class="fas fa-chevron-left menu-arrow text-blue-300 dark:text-blue-500 group-hover:-translate-x-1 transition-transform"></i>
+                </button>
+                <button onclick="openUnitConverter('temperature')"
+                    class="w-full text-right p-4 bg-gray-50 rounded-2xl flex justify-between items-center active:bg-gray-100">
+                    <span><i class="fas fa-thermometer-half ml-3 text-blue-500"></i><span data-lang="tempUnits">وحدات
+                            الحرارة</span></span>
+                            <i class="fas fa-chevron-left menu-arrow text-blue-300 dark:text-blue-500 group-hover:-translate-x-1 transition-transform"></i>
+                </button>
+
+                <!-- وحدات كهربائية -->
+                <button onclick="openUnitConverter('volt')"
+                    class="w-full text-right p-4 bg-gray-50 rounded-2xl flex justify-between items-center active:bg-gray-100">
+                    <span><i class="fas fa-bolt ml-3 text-orange-500"></i><span data-lang="voltUnits">وحدات
+                            الفولت</span></span>
+                            <i class="fas fa-chevron-left menu-arrow text-blue-300 dark:text-blue-500 group-hover:-translate-x-1 transition-transform"></i>
+                </button>
+                <button onclick="openUnitConverter('amp')"
+                    class="w-full text-right p-4 bg-gray-50 rounded-2xl flex justify-between items-center active:bg-gray-100">
+                    <span><i class="fas fa-bolt ml-3 text-orange-500"></i><span data-lang="ampUnits">وحدات
+                            الأمبير</span></span>
+                            <i class="fas fa-chevron-left menu-arrow text-blue-300 dark:text-blue-500 group-hover:-translate-x-1 transition-transform"></i>
+                </button>
+                <button onclick="openUnitConverter('watt')"
+                    class="w-full text-right p-4 bg-gray-50 rounded-2xl flex justify-between items-center active:bg-gray-100">
+                    <span><i class="fas fa-bolt ml-3 text-orange-500"></i><span data-lang="wattUnits">وحدات
+                            الواط</span></span>
+                            <i class="fas fa-chevron-left menu-arrow text-blue-300 dark:text-blue-500 group-hover:-translate-x-1 transition-transform"></i>
+                </button>
+                <button onclick="openUnitConverter('farad')"
+                    class="w-full text-right p-4 bg-gray-50 rounded-2xl flex justify-between items-center active:bg-gray-100">
+                    <span><i class="fas fa-bolt ml-3 text-orange-500"></i><span data-lang="faradUnits">وحدات
+                            السعة</span></span>
+                            <i class="fas fa-chevron-left menu-arrow text-blue-300 dark:text-blue-500 group-hover:-translate-x-1 transition-transform"></i>
+                </button>
+                <button onclick="openUnitConverter('henry')"
+                    class="w-full text-right p-4 bg-gray-50 rounded-2xl flex justify-between items-center active:bg-gray-100">
+                    <span><i class="fas fa-bolt ml-3 text-orange-500"></i><span data-lang="henryUnits">وحدات
+                            الهنري</span></span>
+                            <i class="fas fa-chevron-left menu-arrow text-blue-300 dark:text-blue-500 group-hover:-translate-x-1 transition-transform"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <div id="overlay" onclick="toggleSidebar()" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[900] hidden"></div>
+
+    <!-- Navigation -->
+    <nav class="p-4 flex gap-3 flex-wrap gap-y-3">
+        <button id="tab-temp" onclick="switchPage('temp')"
+            class="flex-1 py-4 rounded-2xl font-bold transition-all tab-active min-w-[80px]">
+            <span data-lang="tabTemp">الحرارة</span>
+        </button>
+        <button id="tab-elec" onclick="switchPage('elec')"
+            class="flex-1 py-4 rounded-2xl font-bold transition-all tab-inactive min-w-[80px]">
+            <span data-lang="tabElec">الكهرباء</span>
+        </button>
+        <button id="tab-room" onclick="switchPage('room')"
+            class="flex-1 py-4 rounded-2xl font-bold transition-all tab-inactive min-w-[80px]">
+            <span data-lang="tabRoom">الغرف</span>
+        </button>
+        <button id="tab-comp" onclick="switchPage('comp')"
+            class="flex-1 py-4 rounded-2xl font-bold transition-all tab-inactive min-w-[80px]">
+            <span data-lang="tabComp">الضاغط</span>
+        </button>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="px-4">
+        <!-- Sensor/Temp -->
+        <section id="page-temp" class="page-content space-y-5">
+            <div class="glass-card p-6 rounded-[2.5rem]">
+                <h3 class="font-bold text-blue-700 mb-6 flex items-center text-lg"><i
+                        class="fas fa-microchip ml-2"></i><span data-lang="sensorCalc"> حساب الحساس (NTC)</span></h3>
+                <div class="space-y-4">
+                    <div class="relative flex flex-col gap-2">
+                        <select id="temp-mode" onchange="clearResults('temp')"
+                            class="w-full p-4 bg-gray-50 rounded-2xl font-bold border-2 border-transparent focus:border-blue-200 outline-none">
+                            <option value="RT" data-lang="tempModeRT"> °C الى حرارة Ω من مقاومة</option>
+                            <option value="TR" data-lang="tempModeTR">Ω الى مقاومة °C من حرارة</option>
+                        </select>
+                        <div class="flex justify-center -my-3 z-10">
+                            <button onclick="swapTempMode()"
+                                class="bg-white border-2 border-gray-100 p-2 rounded-full shadow-sm text-blue-600 active:rotate-180 transition-transform duration-300">
+                                <i class="fas fa-retweet"></i>
+                            </button>
+                        </div>
+                        <select id="sensor-type" onchange="clearResults('temp'); updateSensorConstants();"
+                            class="w-full p-4 bg-gray-50 rounded-2xl font-bold outline-none">
+                            <option value="10k" data-lang="sensor10k">10K Sensor</option>
+                            <option value="5k" data-lang="sensor5k">5K Sensor</option>
+                            <option value="200k" data-lang="sensor200k">200K Sensor</option>
+                            <option value="custom" data-lang="sensorCustom">مخصص (Custom)</option>
+                        </select>
+                    </div>
+
+                    <div id="custom-params" class="hidden grid grid-cols-2 gap-3 p-3 bg-blue-50 rounded-2xl">
+                        <div class="text-center"><label class="text-[10px] font-bold block mb-1"
+                                data-lang="r0">R0</label><input type="number" id="r0-val" value="10000"
+                                class="w-full p-3 rounded-xl text-center font-bold"></div>
+                        <div class="text-center"><label class="text-[10px] font-bold block mb-1"
+                                data-lang="beta">Beta</label><input type="number" id="beta-val" value="3950"
+                                class="w-full p-3 rounded-xl text-center font-bold"></div>
+                    </div>
+
+                    <input type="number" id="temp-input" onkeydown="handleEnter(event, calculateTemperature)"
+                        class="w-full p-4 bg-blue-50 border-2 border-blue-100 rounded-3xl text-center text-4xl font-bold text-blue-800"
+                        placeholder="0">
+                    <div id="temp-validation" class="validation-error hidden"></div>
+
+                    <button onclick="calculateTemperature()"
+                        class="w-full bg-blue-600 text-white py-5 rounded-3xl font-bold text-xl shadow-xl active:scale-[0.98] transition-transform"
+                        data-lang="calcBtn">احسب النتيجة</button>
+
+                    <div id="temp-result-div"
+                        class="hidden p-4 bg-blue-700 text-white rounded-[2rem] text-center font-bold text-3xl num-font relative">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        
+        <!-- Electrical -->
+        <section id="page-elec" class="page-content space-y-4 hidden">
+            <div class="glass-card p-6 rounded-[2.5rem]">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="font-bold text-orange-600 text-lg flex items-center"><i
+                            class="fas fa-bolt ml-2"></i><span data-lang="elecCalc"> الحسابات الكهربائية</span></h3>
+                </div>
+                <div class="space-y-4">
+                    <select id="elec-mode" onchange="resetElecFields(); clearResults('elec');"
+                        class="w-full p-4 bg-gray-50 rounded-2xl font-bold outline-none">
+                        <option value="laws" selected data-lang="elecLaws">قوانين كهربائية</option>
+                        <option value="cap" data-lang="elecCap">المكثف (µF)</option>
+                        <option value="amp" data-lang="elecAmp">أمبير المكثف (Ampere)</option>
+                        <option value="pow" data-lang="elecPow">القدرة (Watts)</option>
+                    </select>
+                    <div id="elec-dynamic-inputs" class="space-y-4"></div>
+                    <div id="elec-validation" class="validation-error hidden"></div>
+                    <button onclick="calculateElectrical()"
+                        class="w-full bg-orange-500 text-white py-5 rounded-3xl font-bold shadow-lg active:scale-95 transition-transform"
+                        data-lang="calcBtn">بدء الحساب</button>
+                    <div id="elec-result-div"
+                        class="hidden p-6 bg-orange-600 text-white rounded-3xl text-center font-bold text-3xl num-font relative">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- Room Capacity -->
+        <section id="page-room" class="page-content space-y-4 hidden">
+            <div class="glass-card p-6 rounded-[2.5rem]">
+                <h3 class="font-bold text-emerald-600 mb-6 flex items-center text-lg"><i
+                        class="fas fa-house-laptop ml-2"></i><span data-lang="roomCalc"> حساب التكييف</span></h3>
+                <div class="grid grid-cols-3 gap-3 mb-6">
+                    <div class="flex flex-col"><label class="text-[10px] text-center mb-1 font-bold"
+                            data-lang="length">الطول</label><input type="number" id="room-l"
+                            class="p-4 bg-gray-50 rounded-2xl text-center font-bold" value="5" min="1" max="100"></div>
+                    <div class="flex flex-col"><label class="text-[10px] text-center mb-1 font-bold"
+                            data-lang="width">العرض</label><input type="number" id="room-w"
+                            class="p-4 bg-gray-50 rounded-2xl text-center font-bold" value="4" min="1" max="100"></div>
+                    <div class="flex flex-col"><label class="text-[10px] text-center mb-1 font-bold"
+                            data-lang="height">الارتفاع</label><input type="number" id="room-h"
+                            class="p-4 bg-gray-50 rounded-2xl text-center font-bold" value="3" min="1" max="50"></div>
+                </div>
+                <div id="room-validation" class="validation-error hidden mb-4"></div>
+                <select id="room-s" class="w-full p-5 bg-gray-50 rounded-2xl mb-6 font-bold outline-none">
+                    <option value="250" data-lang="roomNormal">غرفة عادية (250)</option>
+                    <option value="300" selected data-lang="roomSunny">غرفة مشمسة (300)</option>
+                    <option value="350" data-lang="roomKitchen">مطبخ / واجهة زجاج (350)</option>
+                    <option value="400" data-lang="roomHighLoad">حمل حرارى عالى جدا (400)</option>
+                </select>
+                <button onclick="calculateRoom()"
+                    class="w-full bg-emerald-600 text-white py-5 rounded-3xl font-bold text-lg shadow-lg"
+                    data-lang="calcCapacity">احسب القدرة المطلوبة</button>
+
+                <div id="room-results-div" class="hidden mt-8 space-y-3">
+                    <div class="p-5 bg-emerald-50 rounded-2xl border-2 border-emerald-100 grid grid-cols-2 gap-4">
+                        <div class="text-center border-l border-emerald-200">
+                            <span class="text-[10px] text-gray-500 block" data-lang="actualHp">الحصان الفعلي</span>
+                            <span id="room-res-hp" class="num-font font-bold text-xl text-emerald-700"></span>
+                        </div>
+                        <div class="text-center">
+                            <span class="text-[10px] text-gray-500 block" data-lang="coolingTon">طن التبريد</span>
+                            <span id="room-res-tr" class="num-font font-bold text-xl text-emerald-700"></span>
+                        </div>
+                        <div class="text-center border-l border-emerald-200">
+                            <span class="text-[10px] text-gray-500 block" data-lang="totalBtu">إجمالي الـ BTU</span>
+                            <span id="room-res-btu" class="num-font font-bold text-xl text-emerald-700"></span>
+                        </div>
+                        <div class="text-center">
+                            <span class="text-[10px] text-gray-500 block" data-lang="expectedAmp">الأمبير المتوقع</span>
+                            <span id="room-res-amp" class="num-font font-bold text-xl text-emerald-700"></span>
+                        </div>
+                    </div>
+
+                    <div class="p-6 bg-blue-600 text-white rounded-[2rem] shadow-xl relative overflow-hidden">
+                        <div class="relative z-10">
+                            <div class="text-xs font-bold opacity-80 text-center mb-2" data-lang="marketCapacity">القدرة
+                                المناسبة في السوق</div>
+                            <div id="room-market-res" class="text-4xl font-black text-center mb-4 num-font">--</div>
+                            <div class="grid grid-cols-3 gap-2 pt-4 border-t border-blue-400/50">
+                                <div class="text-center">
+                                    <div class="text-[9px] opacity-70" data-lang="ton">طن</div>
+                                    <div id="market-tr" class="font-bold num-font">--</div>
+                                </div>
+                                <div class="text-center border-x border-white/20">
+                                    <div class="text-[9px] opacity-70" data-lang="btu">BTU</div>
+                                    <div id="market-btu" class="font-bold num-font">--</div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="text-[9px] opacity-70" data-lang="amp">أمبير</div>
+                                    <div id="market-amp" class="font-bold num-font">--</div>
+                                </div>
+                            </div>
+                        </div>
+                        <i class="fas fa-snowflake absolute -bottom-4 -left-4 text-white/10 text-8xl"></i>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== تبويب الضاغط ==================== -->
+        <section id="page-comp" class="page-content space-y-4 hidden">
+            <div class="glass-card p-6 rounded-[2.5rem]">
+                <h3 class="font-bold text-blue-700 mb-6 flex items-center text-lg">
+                    <i class="fas fa-compress-alt ml-2"></i><span data-lang="compInfo"> معلومات الضاغط</span>
+                </h3>
+
+                <div class="space-y-4">
+                    <div class="relative">
+                        <input type="text" id="comp-input" list="comp-list"
+                            class="w-full p-4 bg-blue-50 border-2 border-blue-100 rounded-3xl text-center text-1xl font-bold text-blue-800"
+                            data-placeholder-lang="compPlaceholder" placeholder="موديل الضاغط (مثال: ZR12K3)">
+                        <datalist id="comp-list"></datalist>
+                    </div>
+
+                    <button onclick="searchCompressor()"
+                        class="w-full bg-blue-600 text-white py-5 rounded-3xl font-bold text-xl shadow-xl active:scale-[0.98] transition-transform"
+                        data-lang="showCompInfo">
+                        عرض معلومات الضاغط
+                    </button>
+
+                    <div id="comp-result-div" class="hidden relative"></div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Modal Unit Converter -->
+    <div id="modal-converter" class="fixed inset-0 flex items-center justify-center z-[2000] hidden p-4">
+        <div
+            class="bg-white rounded-[3rem] w-full max-w-sm p-8 shadow-2xl relative border-t-8 border-blue-600 overflow-y-auto max-h-[95vh]">
+            <h3 id="conv-title" class="text-2xl font-bold mb-8 text-center text-gray-800 dark:text-blue-500" data-lang="convTitle">تحويل
+                الوحدات</h3>
+            <div class="space-y-6">
+                <div class="relative flex flex-col gap-10">
+                    <select id="unit-from" onchange="clearConvResult()"
+                        class="w-full p-5 bg-gray-50 rounded-3xl font-bold text-blue-700 outline-none text-center"></select>
+                    <button onclick="swapConverterUnits()"
+                        class="swap-btn-center text-blue-600 active:rotate-180 transition-transform duration-300">
+                        <i class="fas fa-retweet text-xl"></i>
+                    </button>
+
+                    <select id="unit-to" onchange="clearConvResult()"
+                        class="w-full p-5 bg-gray-50 rounded-3xl font-bold text-green-700 outline-none text-center"></select>
+                </div>
+
+                <div class="space-y-4 pt-4">
+                    <input type="number" id="conv-input" onkeydown="handleEnter(event, convertNow)"
+                        class="w-full p-4 bg-gray-50 border-2 border-blue-50 rounded-[2rem] text-center text-4xl font-bold num-font"
+                        value="0" placeholder="0">
+                    <div id="conv-validation" class="validation-error hidden"></div>
+                    <div id="conv-result-div"
+                        class="hidden p-4 bg-blue-700 text-white rounded-[2rem] text-center text-2xl font-bold num-font">
+                    </div>
+                    <div class="flex gap-4">
+                        <button onclick="convertNow()"
+                            class="flex-[2] bg-blue-600 text-white py-5 rounded-2xl font-bold text-lg shadow-lg"
+                            data-lang="convertBtn">تحويل</button>
+                        <button onclick="closeModal()"
+                            class="flex-1 bg-gray-100 text-gray-600 py-5 rounded-2xl font-bold"
+                            data-lang="closeBtn">إغلاق</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="fixed inset-0 bg-black/80 backdrop-blur-md -z-10" onclick="closeModal()"></div>
+    </div>
+
+    <!-- Modal حاسبة التدفق من الإزاحة - بنفس تصميم حاسبة السلك (برتقالي) -->
+    <div id="modal-flow" class="fixed inset-0 flex items-center justify-center z-[2000] hidden p-4">
+        <div
+            class="bg-white rounded-[3rem] w-full max-w-md p-8 shadow-2xl relative border-t-8 border-orange-500 overflow-y-auto max-h-[95vh]">
+            <h3 class="text-2xl font-bold mb-2 text-center text-orange-800 dark:text-orange-500 " data-lang="flowTitle">حساب التدفق من الإزاحة
+            </h3>
+            <p class="text-xs text-center text-gray-500 mb-6" data-lang="flowSub">احسب معدل التدفق للضواغط والمضخات</p>
+
+            <div class="space-y-6">
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2" data-lang="dispUnit">وحدة الإزاحة:</label>
+                    <select id="flow-unit"
+                        class="w-full p-4 bg-gray-50 rounded-2xl font-bold outline-none border-2 border-orange-100">
+                        <option value="m3" data-lang="m3">متر مكعب (m³)</option>
+                        <option value="L" selected data-lang="L">لتر (L)</option>
+                        <option value="cm3" data-lang="cm3">سنتيمتر مكعب (cm³)</option>
+                        <option value="in3" data-lang="in3">بوصة مكعبة (in³)</option>
+                        <option value="ft3" data-lang="ft3">قدم مكعبة (ft³)</option>
+                        <option value="galUS" data-lang="galUS">غالون أمريكي (gal US)</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2" data-lang="dispPerCycle">الإزاحة لكل
+                        دورة:</label>
+                    <input type="number" id="flow-displacement" value="10" step="any" min="0"
+                        class="w-full p-4 bg-gray-50 rounded-2xl text-center font-bold num-font border-2 border-orange-100"
+                        data-placeholder-lang="dispPlaceholder" placeholder="أدخل الإزاحة">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2" data-lang="rpm">عدد اللفات في الدقيقة
+                        (RPM):</label>
+                    <input type="number" id="flow-rpm" value="1450" step="any" min="0"
+                        class="w-full p-4 bg-gray-50 rounded-2xl text-center font-bold num-font border-2 border-orange-100"
+                        data-placeholder-lang="rpmPlaceholder" placeholder="مثال: 1450">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2" data-lang="cylinders">عدد الأسطوانات
+                        (اختياري):</label>
+                    <input type="number" id="flow-cylinders" value="1" step="1" min="1"
+                        class="w-full p-4 bg-gray-50 rounded-2xl text-center font-bold num-font border-2 border-orange-100"
+                        placeholder="1">
+                </div>
+
+                <div id="flow-validation" class="validation-error hidden"></div>
+
+                <button onclick="calculateFlow()"
+                    class="w-full bg-orange-500 text-white py-5 rounded-3xl font-bold text-lg shadow-lg hover:bg-orange-600 transition-all">
+                    <i class="fas fa-calculator ml-2"></i><span data-lang="calcFlow"> حساب التدفق</span>
+                </button>
+
+                <div id="flow-result-div"
+                    class="hidden space-y-4 mt-4 p-5 bg-orange-50 rounded-2xl border-2 border-orange-200">
+                    <h4 class="font-bold text-center text-orange-800" data-lang="flowRate">معدل التدفق:</h4>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="bg-white p-3 rounded-xl text-center shadow-sm">
+                            <div class="text-xs text-gray-500" data-lang="lmin">لتر/دقيقة</div>
+                            <div id="flow-lmin" class="text-xl font-bold text-orange-700 num-font">0</div>
+                            <div class="text-[10px] text-gray-400">L/min</div>
+                        </div>
+                        <div class="bg-white p-3 rounded-xl text-center shadow-sm">
+                            <div class="text-xs text-gray-500" data-lang="m3h">متر³/ساعة</div>
+                            <div id="flow-m3h" class="text-xl font-bold text-orange-700 num-font">0</div>
+                            <div class="text-[10px] text-gray-400">m³/h</div>
+                        </div>
+                        <div class="bg-white p-3 rounded-xl text-center shadow-sm">
+                            <div class="text-xs text-gray-500" data-lang="cfm">قدم³/دقيقة</div>
+                            <div id="flow-cfm" class="text-xl font-bold text-orange-700 num-font">0</div>
+                            <div class="text-[10px] text-gray-400">CFM</div>
+                        </div>
+                        <div class="bg-white p-3 rounded-xl text-center shadow-sm">
+                            <div class="text-xs text-gray-500" data-lang="gpm">غالون/دقيقة</div>
+                            <div id="flow-gpm" class="text-xl font-bold text-orange-700 num-font">0</div>
+                            <div class="text-[10px] text-gray-400">GPM</div>
+                        </div>
+                    </div>
+                    <p class="text-xs text-center text-gray-500 mt-2" data-lang="flowNote">* لضواغط المكبس استخدم
+                        الإزاحة × RPM × عدد الأسطوانات</p>
+                </div>
+
+                <button onclick="closeFlowModal()"
+                    class="w-full bg-gray-100 text-gray-600 py-3 rounded-2xl font-bold mt-2"
+                    data-lang="closeBtn">إغلاق</button>
+            </div>
+        </div>
+        <div class="fixed inset-0 bg-black/80 backdrop-blur-md -z-10" onclick="closeFlowModal()"></div>
+    </div>
+
+    <!-- Wire Modal -->
+    <div id="modal-wire" class="fixed inset-0 flex items-center justify-center z-[2000] hidden p-4">
+        <div class="bg-white rounded-[3rem] w-full max-w-sm p-8 shadow-2xl relative border-t-8 border-orange-500">
+            <h3 class="text-xl font-bold mb-6 text-center text-orange-800 dark:text-orange-500 " data-lang="wireTitle">حساب قطر السلك</h3>
+            <div class="space-y-4">
+                <div class="grid grid-cols-2 gap-3">
+                    <input type="number" id="wire-amp" data-placeholder-lang="wireAmpPlaceholder"
+                        placeholder="أمبير (A)" class="p-4 bg-gray-50 rounded-2xl text-center font-bold num-font"
+                        min="0.1" max="1000">
+                    <input type="number" id="wire-dist" data-placeholder-lang="wireDistPlaceholder"
+                        placeholder="مسافة (م)" class="p-4 bg-gray-50 rounded-2xl text-center font-bold num-font"
+                        min="1" max="1000">
+                </div>
+                <div id="wire-validation" class="validation-error hidden"></div>
+                <select id="wire-metal" class="w-full p-4 bg-gray-50 rounded-2xl font-bold outline-none">
+                    <option value="0.0172" data-lang="copper">نحاس (Copper)</option>
+                    <option value="0.0282" data-lang="aluminum">ألمنيوم (Aluminum)</option>
+                </select>
+                <select id="wire-phase" class="w-full p-4 bg-gray-50 rounded-2xl font-bold outline-none">
+                    <option value="220" data-lang="singlePhase">Single Phase (220V)</option>
+                    <option value="380" data-lang="threePhase">Three Phase (380V)</option>
+                </select>
+                <button onclick="calculateWire()"
+                    class="w-full bg-orange-500 text-white py-5 rounded-3xl font-bold text-lg shadow-lg"
+                    data-lang="calcWire">حساب القطر</button>
+                <div id="wire-result-div" class="hidden space-y-4 mt-4"></div>
+                <button onclick="closeWireModal()" class="w-full bg-gray-100 text-gray-600 py-3 rounded-2xl font-bold"
+                    data-lang="closeBtn">إغلاق</button>
+            </div>
+        </div>
+        <div class="fixed inset-0 bg-black/80 backdrop-blur-md -z-10" onclick="closeWireModal()"></div>
+    </div>
+
+    <!-- Social Footer -->
+    <footer
+        class="fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-lg border-t border-gray-100 p-5 flex justify-around items-center z-40 rounded-t-[2.5rem] shadow-2xl">
+        <a href="https://www.facebook.com/share/1BJ84LMjtc/" target="_blank"
+            class="text-blue-600 text-3xl hover:scale-110 transition-transform"><i class="fab fa-facebook"></i></a>
+        <a href="https://wa.me/201012655082" target="_blank"
+            class="text-green-500 text-3xl hover:scale-110 transition-transform"><i class="fab fa-whatsapp"></i></a>
+        <a href="mailto:syfaldynmhsn3@gmail.com" class="text-red-500 text-3xl hover:scale-110 transition-transform"><i
+                class="fas fa-envelope"></i></a>
+        <div class="flex flex-col items-center">
+            <span class="text-[10px] font-bold text-gray-400" data-lang="madeBy">MADE BY</span>
+            <span id="developerName" class="text-[11px] font-bold text-blue-600 tracking-tighter">سيف الدين ريحان</span>
+        </div>
+    </footer>
+
+    <!-- سكربت compressors-data.js (يتم تحميله خارجياً) -->
+    <script src="js/compressors-data.js"></script>
+
+    <script src="basic.js">
+        
+    </script>
+</body>
+
+</html>
+    
